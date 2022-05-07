@@ -24,4 +24,8 @@
 ## Project Features
 
 * Home-page for the information of the webstie
-* favorite-page  
+* favorite-page
+* trending-page
+* search-page
+* popular-page
+* topRated-page  
