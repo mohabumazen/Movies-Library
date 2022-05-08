@@ -28,4 +28,7 @@
 * trending-page
 * search-page
 * popular-page
-* topRated-page  
+* topRated-page
+* The client can add Movies to the DataBae
+* The client can see Movies saved in the DataBase
+  
