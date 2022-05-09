@@ -6,6 +6,10 @@
 
 ![WRRC Image](./assets/WRRC.PNG)
 
+## WRRC with 3rd part API & DataBase
+
+![WRRC Image](./assets/Diagram.PNG)
+
 
 
 ## Overview
