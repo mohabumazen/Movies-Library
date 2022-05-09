@@ -1,5 +1,5 @@
 'use strict';
-
+// dependencies
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -30,8 +30,12 @@ app.get("/search", searchHandler);
 app.get("/popular/:page?", popularHandler);
 app.get("/toprated/:page?", topratedHandler);
 app.post("/postMovies", postHandler);
-app.get("/getData", getHandler);
+app.get("/getData/:id", getHandler);
+app.put("/updateMovieGenres/:id", updateMovieGenresHandler);
+app.delete("/deleteMovie/:id", deleteMovieHandler);
+app.get("/getMovie/:id", getMoiveHandler)
 
+// http://localhost:3000
 
 // constructor function
 function MovieLibrary(id,title,release,poster,overview) {
@@ -43,6 +47,8 @@ function MovieLibrary(id,title,release,poster,overview) {
     
 }
 
+
+// routes handlers
 function handleHomePage(req,res) {
     
     let arr = [];
@@ -191,7 +197,9 @@ function postHandler(req, res){
 }
 
 function getHandler(req, res){
-    let sql = `SELECT * FROM moviesdata ;`;
+    // let sql = `SELECT * FROM moviesdata ;`;
+    let id = req.params.id;
+    let sql = `SELECT * FROM moviesdata WHERE id=${id};`;
     client.query(sql).then((result) => {
         console.log(result);
         res.json(result.rows);
@@ -200,6 +208,38 @@ function getHandler(req, res){
     })
 
 }
+
+function updateMovieGenresHandler(req, res){
+    let id = req.params.id;
+    let movie = req.body;
+    let sql = `UPDATE moviesdata SET genres=$1 WHERE id=${id} RETURNING *;`;
+    let values = [movie.genres];
+    
+    client.query(sql, values).then((data) => {
+        return res.status(200).json(data.rows);
+    });
+};
+
+function deleteMovieHandler(req, res) {
+    // console.log(req);
+    let { id } = req.params;
+    console.log(id);
+    let sql = `DELETE FROM moviesdata WHERE id=${id};`;
+
+    client.query(sql).then(() => {
+        return res.status(204).json([]);
+    });
+};
+
+function getMoiveHandler(req, res) {
+    let id = req.params.id;
+    let sql = `SELECT * FROM moviesdata WHERE id=${id};`;
+    client.query(sql).then(result => {
+        console.log(result.rows);
+        res.status(200).json(result.rows);
+    });
+
+};
 
 
 
