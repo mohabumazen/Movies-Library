@@ -10,17 +10,17 @@ require('dotenv').config()
 const port = process.env.PORT;
 const homeData = require("./data.json");
 let apiKey = process.env.API_KEY;
-let urL = process.env.DATABASE_URL;
+// let urL = process.env.DATABASE_URL;
 const { Client } = require("pg");
 const { query } = require("express");
-const client = new Client(urL);
-// const client = new Client({
-//     connectionString: process.env.DATABASE_URL,
-//     ssl:{
+// const client = new Client(urL);
+const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl:{
 
-//         rejectUnauthorized: false
-//     }
-// })
+        rejectUnauthorized: false
+    }
+})
 
 
 
