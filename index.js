@@ -5,14 +5,15 @@ const app = express();
 const cors = require("cors");
 const axios = require("axios").default;
 const bodyParser = require("body-parser");
-const PORT = process.env.PORT || 3001;
+// const port = 3000;
 require('dotenv').config()
+const port = process.env.PORT;
 const homeData = require("./data.json");
 let apiKey = process.env.API_KEY;
 let urL = process.env.DATABASE_URL;
 const { Client } = require("pg");
 const { query } = require("express");
-const client = new Client(url);
+const client = new Client(urL);
 // const client = new Client({
 //     connectionString: process.env.DATABASE_URL,
 //     ssl:{
@@ -38,7 +39,7 @@ app.get("/search", searchHandler);
 app.get("/popular/:page?", popularHandler);
 app.get("/toprated/:page?", topratedHandler);
 app.post("/postMovies", postHandler);
-app.get("/getData/:id", getHandler);
+app.get("/getMovies", getHandler);
 app.put("/updateMovieGenres/:id", updateMovieGenresHandler);
 app.delete("/deleteMovie/:id", deleteMovieHandler);
 app.get("/getMovie/:id", getMoiveHandler)
@@ -189,11 +190,11 @@ function postHandler(req, res){
     console.log(req.body);
     
 
-    let {title, length, summary, genres} = req.body;
+    let {title, length, summary, genres, comment} = req.body;
     
 
-    let sql = `INSERT INTO moviesdata (title, length, summary, genres)VALUES ($1, $2, $3, $4) RETURNING *;`
-    let values = [title, length, summary, genres];
+    let sql = `INSERT INTO moviesdata (title, length, summary, genres, comment)VALUES ($1, $2, $3, $4, $5) RETURNING *;`
+    let values = [title, length, summary, genres, comment];
     client.query(sql,values).then(result => {
         console.log(result);
         return res.status(201).json(result.rows);
@@ -205,9 +206,8 @@ function postHandler(req, res){
 }
 
 function getHandler(req, res){
-    // let sql = `SELECT * FROM moviesdata ;`;
-    let id = req.params.id;
-    let sql = `SELECT * FROM moviesdata WHERE id=${id};`;
+
+    let sql = `SELECT * FROM moviesdata ;`;
     client.query(sql).then((result) => {
         console.log(result);
         res.json(result.rows);
