@@ -40,7 +40,7 @@ app.get("/popular/:page?", popularHandler);
 app.get("/toprated/:page?", topratedHandler);
 app.post("/postMovies", postHandler);
 app.get("/getMovies", getHandler);
-app.put("/updateMovieGenres/:id", updateMovieGenresHandler);
+app.put("/updateMovieComment/:id", updateMovieCommentHandler);
 app.delete("/deleteMovie/:id", deleteMovieHandler);
 app.get("/getMovie/:id", getMoiveHandler)
 
@@ -217,11 +217,11 @@ function getHandler(req, res){
 
 }
 
-function updateMovieGenresHandler(req, res){
+function updateMovieCommentHandler(req, res){
     let id = req.params.id;
     let movie = req.body;
-    let sql = `UPDATE moviesdata SET genres=$1 WHERE id=${id} RETURNING *;`;
-    let values = [movie.genres];
+    let sql = `UPDATE moviesdata SET comment=$1 WHERE id=${id} RETURNING *;`;
+    let values = [movie.comment];
     
     client.query(sql, values).then((data) => {
         return res.status(200).json(data.rows);
@@ -231,11 +231,11 @@ function updateMovieGenresHandler(req, res){
 function deleteMovieHandler(req, res) {
     // console.log(req);
     let { id } = req.params;
-    console.log(id);
+    console.log(req.params)
     let sql = `DELETE FROM moviesdata WHERE id=${id};`;
 
-    client.query(sql).then(() => {
-        return res.status(204).json([]);
+    client.query(sql).then((data) => {
+        return res.status(204).json(data);
     });
 };
 
