@@ -197,7 +197,7 @@ function postHandler(req, res){
     
 
     let sql = `INSERT INTO moviesdata (title, length, summary, genres, comment)VALUES ($1, $2, $3, $4, $5) RETURNING *;`
-    let values = [titles, length, summary, genres, comment];
+    let values = [title, length, summary, genres, comment];
     client.query(sql,values).then((data) => {
         console.log(data)
         return res.status(201).send(data.rows);
