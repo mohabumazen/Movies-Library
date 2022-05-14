@@ -1,26 +1,29 @@
 'use strict';
 // dependencies
+
+require('dotenv').config()
 const express = require("express");
 const app = express();
 const cors = require("cors");
 const axios = require("axios").default;
 const bodyParser = require("body-parser");
-// const port = 3000;
-require('dotenv').config()
-const port = process.env.PORT;
-const homeData = require("./data.json");
-let apiKey = process.env.API_KEY;
-// let urL = process.env.DATABASE_URL;
 const { Client } = require("pg");
 const { query } = require("express");
-// const client = new Client(urL);
-const client = new Client({
-    connectionString: process.env.DATABASE_URL,
+const homeData = require("./data.json");
+
+
+const port = process.env.PORT;
+const apiKey = process.env.API_KEY;
+const db = process.env.DATABASE_URL;
+
+
+const client = process.env.NODE_ENV == 'PROD' ? new Client({
+    connectionString: db,
     ssl:{
 
         rejectUnauthorized: false
     }
-})
+}) : new Client(db);
 
 
 
@@ -187,18 +190,20 @@ function topratedHandler(req,res){
 }
 
 function postHandler(req, res){
-    console.log(req.body);
+    console.log(req.body1);
     
 
     let {title, length, summary, genres, comment} = req.body;
     
 
     let sql = `INSERT INTO moviesdata (title, length, summary, genres, comment)VALUES ($1, $2, $3, $4, $5) RETURNING *;`
-    let values = [title, length, summary, genres, comment];
-    client.query(sql,values).then(() => {
-        return res.status(201).send("added successfully");
+    let values = [titles, length, summary, genres, comment];
+    client.query(sql,values).then((data) => {
+        console.log(data)
+        return res.status(201).send(data.rows);
 
     }).catch((err) => {
+        console.log(err)
         handleError(err, req, res);
     })
 
